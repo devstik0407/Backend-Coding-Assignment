@@ -14,11 +14,13 @@ function User(name){
     this.reviewedMovies=new Set();
     this.category="Viewer";
 }
+//MovieReview class contains list of users and movies and all operations
+//to be performed in a movie review system
 class MovieReview{
     #movies=new Array();
     #users=new Array();
-    #movieIds={};
-    #userIds={};
+    #movieIds={}; //maps the name of a movie to the index of that movie in movies array
+    #userIds={}; //maps the name of a user to the index of that user in users array
     #reviewsPerReleaseYear={};
     constructor(){
         console.log("Created a new instance of Movie Review class");
@@ -35,7 +37,7 @@ class MovieReview{
         let newMovie=new Movie(name, releaseYear, genre);
         this.#movieIds[name]=this.#movies.length;
         this.#movies.push(newMovie);
-        console.log("Successfully")
+        console.log("Successfully added a new movie")
     }
     addUser(name){
         if(name in this.#userIds){
@@ -45,6 +47,7 @@ class MovieReview{
         let newUser=new User(name);
         this.#userIds[name]=this.#users.length;
         this.#users.push(newUser);
+        console.log("Successfully added a new user");
     }
     add_review(userName, movieName, reviewScore){
         if(this.#userIds[userName]===undefined){
@@ -82,6 +85,7 @@ class MovieReview{
         this.#reviewsPerReleaseYear[releaseYear].reviewScore += reviewScore * this.#getMultiplier(user);
         this.#reviewsPerReleaseYear[releaseYear].reviewCount++;
         user.reviewCount++;
+        console.log("Successfully added a new review");
         this.#upgradeUser(user);
     }
     topMoviesByGenre(n, genre){
@@ -131,7 +135,7 @@ class MovieReview{
         this.#sortMoviesByCriticScore(midIndex+1, endIndex);
         let i=startIndex, j=midIndex+1;
         let tempArr=[];
-        while(i<midIndex && j<endIndex){
+        while(i<=midIndex && j<=endIndex){
             if(this.#movies[i].totalCriticScore>this.#movies[j].totalCriticScore){
                 tempArr.push(this.#movies[i]);
                 i++;
@@ -149,8 +153,8 @@ class MovieReview{
             tempArr.push(this.#movies[j]);
             j++;
         }
-        for(let i=startIndex;i<=endIndex;i++){
-            this.#movies[i]=tempArr[i-startIndex];
+        for(let k=startIndex;k<=endIndex;k++){
+            this.#movies[k]=tempArr[k-startIndex];
         }
     }
     #upgradeUser(user){
@@ -164,7 +168,7 @@ class MovieReview{
             user.category="Critic";
         }
     }
-    #factor(user){
+    #getMultiplier(user){
         if(user.category==="Admin"){
             return 5;
         }
